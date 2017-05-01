@@ -1,0 +1,58 @@
+﻿1. Write initial image into SD card.
+	image: Armbian_5.25_Cubietruck_Debian_jessie_default_3.4.113.7z (https://dl.armbian.com/cubietruck/Debian_jessie_default.7z)
+	Kernel: 3.4 modified by sunxi;
+//	Note: Kernel .next doesn't support Mali;
+2. First login: root/1234. 
+	A new root password: cubieboard;
+	A new user: cubie/cubieboard;
+// Выбирать можно любой, но для единообразия я взял тот, который чаще всего встречается
+3. Disable WiFi unstable kernel module
+	В файле /etc/modules удалить строку "ap6210"
+// Ускоряет загрузку и убирает нестабильный модуль WiFi из ядра. Есть смысл сделать перезагрузку после настройки
+4. Обновление системы:
+	sudo apt upgrade && apt update
+5. Enable 2 displays: VGA 1024x768 + HDMI 1280x720 (all command under root):
+	copy /changes/boot/bin/* /boot/bin/
+	/boot/armbianEnv.txt: *disp_mode=1024x768
+	chmod +x /boot/bin/update_fex.sh
+	/boot/bin/update_fex.sh /boot/bin/cubietruck_vgahdmi_disable_wifi_1280x720.fex
+	reboot
+// После перезагрузки должны работать оба монитора.
+6. Установить пакеты:
+	sudo apt-get install libfreeimage-dev libmikmod-dev libogg-dev libvorbis-dev libFluidSynth-dev libsmpeg-dev
+7.	Дополнительные библиотеки:
+	7.1 SDL mixer: 
+		cd ~/prj
+		mkdir export
+		cd export
+		wget https://www.libsdl.org/projects/SDL_mixer/release/SDL_mixer-1.2.12.tar.gz
+		tar -xzf SDL_mixer-1.2.12.tar.gz
+		cd  SDL_mixer-1.2.12
+		./autogen.sh
+		./configure --prefix=/usr
+		make
+		sudo make install
+8. Добавить разрешения для SDL:
+	sudo usermod -a -G input cubie
+    Сделать логаут/логин
+9. Сборка проекта:
+	mkdir prj
+	cd prj
+	git clone https://github.com/kuzya77/carib.A20
+	cd carib.A20
+	aclocal
+	autoconf
+	autoheader
+	automake --add-missing
+	./configure
+	make
+10.Запуск демо:
+	Скопировать файл blackdef.ini в carib.A20;
+	Запустить game/carib
+	Управление:
+		'3' - смена ставки,
+		'8' - старт,
+		'e' - добавка кредита.
+		Esc - выход.
+		Игровой процесс может глючить, но целью перенести всю игру и не было.
+

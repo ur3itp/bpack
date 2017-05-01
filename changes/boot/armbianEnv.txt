@@ -1,0 +1,5 @@
+verbosity=7
+console=both
+disp_mode=1024x768
+rootdev=UUID=812e28db-54bf-41da-9218-8958d10125e4
+rootfstype=ext4

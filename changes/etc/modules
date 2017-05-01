@@ -1,0 +1,11 @@
+hci_uart
+gpio_sunxi
+rfcomm
+hidp
+sunxi-ir
+bonding
+spi_sun7i
+#-WiFi support unstable, must be disabled
+#ap6210
+#+Mali 3d graphics
+mali
